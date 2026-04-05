@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Hacker Chat</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+</head>
+
+<body>
+
+<div class="chat-container">
+
+<h2>💬 Hacker Chat</h2>
+
+<div id="chat-box"></div>
+
+<div class="input-area">
+<input id="message" placeholder="Type message...">
+<button onclick="sendMessage()">Send</button>
+</div>
+
+</div>
+
+<script>
+
+var socket = io();
+var myId = Math.random();
+
+function sendMessage(){
+
+var msg = document.getElementById("message").value;
+
+socket.emit("message", {text:msg,id:myId});
+
+document.getElementById("message").value="";
+
+}
+
+socket.on("message", function(data){
+
+var chat = document.getElementById("chat-box");
+
+var div = document.createElement("div");
+
+if(data.id==myId){
+div.className="outgoing";
+}else{
+div.className="incoming";
+}
+
+div.innerText=data.text;
+
+chat.appendChild(div);
+
+chat.scrollTop=chat.scrollHeight;
+
+});
+
+</script>
+
+</body>
+</html>
